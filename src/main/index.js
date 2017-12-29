@@ -1,7 +1,5 @@
 import {app, BrowserWindow} from 'electron';
-import {config} from './store.js';
-
-console.log('got app config', config);
+import './ipcManager.js';
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html

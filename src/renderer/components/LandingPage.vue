@@ -1,12 +1,9 @@
 <template>
   <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
     <main>
       <div class="left-side">
-        <span class="title">
-          Welcome to your new project!
-        </span>
-        <system-information></system-information>
+        <user-information></user-information>
+        <!-- <system-information></system-information> -->
       </div>
 
       <div class="right-side">
@@ -31,10 +28,11 @@
 
 <script>
   import SystemInformation from './LandingPage/SystemInformation';
+  import UserInformation from './LandingPage/UserInformation';
 
   export default {
     name: 'landing-page',
-    components: {SystemInformation},
+    components: {SystemInformation, UserInformation},
     methods: {
       open(link) {
         this.$electron.shell.openExternal(link);
@@ -62,7 +60,7 @@
         rgba(229, 229, 229, .9) 100%
       );
     height: 100vh;
-    padding: 60px 80px;
+    padding: 20px 20px;
     width: 100vw;
   }
 

@@ -4,7 +4,7 @@ const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 
 const configObj = ensureConfig();
-const userDb = findOrCreateDbFile('user');
+const userDb = ensureUser();
 
 export {configObj as config, userDb as user};
 
@@ -28,6 +28,27 @@ function ensureConfig() {
   return db.getState();
 }
 
+/**
+* Synchronously get or create the base user file
+* @return {Object} representing the user db interface
+* On first run an anonymous, nameless, user is created
+*/
+function ensureUser() {
+  let db = findOrCreateDbFile('user');
+  let id = db.get('uid').value();
+  if (id.length === 0) {
+    // don't even import uuid unless we definitely need it
+    const uuidv4 = require('uuid/v4');
+    let uid = uuidv4();
+
+    db.set('uid', uid).value();
+    db.set('created', Date.now()).value();
+    db.write();
+  }
+
+  return db;
+}
+
 
 /**
 * Create a FileSync instance of LowDB at `name`.json in `userData` dir
@@ -41,8 +62,10 @@ function findOrCreateDbFile(name) {
   let options = {};
 
   try {
-    options = require(path.resolve('./support/', `${name}.json`));
-  } catch (e) {}
+    options = require(`./support/${name}.json`);
+  } catch (e) {
+    console.log('could not set defaults for', name, e);
+  }
 
   let db = low(adapter);
   // // Set some defaults
